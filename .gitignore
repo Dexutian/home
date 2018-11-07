@@ -1,0 +1,15 @@
+.idea/
+*.pyc
+*.db
+# Byte-compiled / optimized / DLL files
+/__pycache__/*
+*/migrations/*
+!__init__.py
+*.xls
+*.xlsx
+*.csv
+/media/*
+!.gitkeep
+*.py[cod]
+*.$py.class
+*.sqlite3
