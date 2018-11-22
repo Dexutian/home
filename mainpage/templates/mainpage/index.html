@@ -1,0 +1,58 @@
+{% extends 'utils/base.html' %}
+{% load mainpage_filters_tags %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'mainpage/index.css' %}">
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-1 tree">
+                {{ menus | stockans_unordered_list }}
+            </div>
+            <div class="col-11 col-content">
+                <iframe src="/mainpage/link/" name='main' id="iframepage" frameborder="0" width="100%" scrolling="yes"
+                        marginheight="0" marginwidth="0"></iframe>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+    $('.tree li:has(ul)').addClass('parent_li').find('>span').attr('title', 'Collapse this branch');
+    $('.tree li.parent_li').find(' > ul > li').hide();
+    $('.tree li.parent_li').find(' > span > i').addClass('glyphicon glyphicon-plus-sign');
+
+    $('.tree li > span').on('click', function (e) {
+        $('#iframepage').attr('src', $(this).attr("href"));
+        var children = $(this).parent('li.parent_li').find(' > ul > li');
+        if (children.is(':visible')){
+            children.hide('fast');
+            $(this).parent('li.parent_li').find(' > span > i').addClass('glyphicon glyphicon-plus-sign').
+            removeClass('glyphicon glyphicon-minus-sign');
+        } else {
+            children.show('fast');
+            $(this).parent('li.parent_li').find(' > span > i').addClass('glyphicon glyphicon-minus-sign').
+            removeClass('glyphicon glyphicon-plus-sign');
+        }
+        e.stopPropagation();
+    });
+    </script>
+{% endblock %}
+$('.tree li:has(ul)').addClass('parent_li').find('>span').attr('title', 'Collapse this branch');
+    $('.tree li.parent_li').find(' > ul > li').hide();
+    $('.tree li.parent_li').find(' > span > i').addClass('glyphicon glyphicon-plus-sign');
+    $('.tree li.parent_li > span').on('click', function (e) {
+        $('#iframepage').attr('src', $(this).attr("href"));
+        var children = $(this).parent('li.parent_li').find(' > ul > li');
+        if (children.is(':visible')){
+            children.hide('fast');
+            $(this).parent('li.parent_li').find(' > span > i').addClass('glyphicon glyphicon-plus-sign').
+            removeClass('glyphicon glyphicon-minus-sign');
+        } else {
+            children.show('fast');
+            $(this).parent('li.parent_li').find(' > span > i').addClass('glyphicon glyphicon-minus-sign').
+            removeClass('glyphicon glyphicon-plus-sign');
+        }
+        e.stopPropagation();
+    });

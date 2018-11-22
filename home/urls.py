@@ -17,10 +17,13 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 from django.conf import settings
 from django.views.static import serve
-
+from mainpage import views as mainpage_views
 
 urlpatterns = [
+    path('', mainpage_views.index),
     path('admin/', admin.site.urls),
+    path('mainpage/', include('mainpage.urls')),
+    path('stockans/', include('stockans.urls')),
 ]
 
 if settings.DEBUG:

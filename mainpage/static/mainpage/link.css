@@ -1,0 +1,25 @@
+@media (min-width: 992px) {
+    #domain_container {
+        margin: 0;
+        padding: 10px;
+    }
+    .col-lg-3 {
+        display: block;
+        background-color: #003366;
+        opacity: 0.65;
+        color: #ffffff;
+        border-radius: 10px;
+        margin: 1%;
+        padding: 1%;
+        min-width: 31%;
+    }
+    .col-lg-3>button {
+        color: #ffffff;
+        background-color: #CC3333;
+        width: 120px;
+        margin: 0 auto;
+    }
+    .col-lg-3>p {
+        word-break: break-all;
+    }
+}

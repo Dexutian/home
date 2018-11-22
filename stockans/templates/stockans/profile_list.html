@@ -1,0 +1,14 @@
+{% extends 'utils/app_base.html' %}
+{% load stockans_filters_tags %}
+{% load static %}
+{% block css %}
+
+{% endblock %}
+{% block content %}
+    {% stockans_search %}
+    {% stockans_action %}
+    {% stockans_result_list %}
+{% endblock %}
+{% block js %}
+
+{% endblock %}

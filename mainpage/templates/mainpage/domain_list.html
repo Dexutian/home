@@ -1,0 +1,35 @@
+{% extends 'utils/app_base.html' %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'mainpage/link.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="row" id="domain_container">
+        {% if domains %}
+            {% for domain in domains %}
+                <div class="col-lg-3" id="{{ domain.id }}">
+                    <h6><strong>名称: {{ domain.name }}</strong></h6>
+                    <p><strong>地址: </strong>{{ domain.referer }}</p>
+                    <p><strong>可连接性: </strong>{% if domain.is_link %} 可连接 {% else %} 不可连接 {% endif %}</p>
+                    <p><strong>上一连接时间: </strong>{{ domain.link_time }}</p>
+                    <button type="button" class="btn btn-block">测&nbsp;&nbsp;&nbsp;&nbsp;试</button>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>没有需要连接的域名！</p>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+    $('.btn').click(function () {
+        $.post("{% url 'mainpage:link_check' %}",
+            {
+                id: $(this).parent().attr("id")
+            },
+            function (data, status) {
+                window.location.reload();
+            });
+    });
+    </script>
+{% endblock %}
