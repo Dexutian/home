@@ -1,4 +1,4 @@
-import urllib3, xlrd, logging, re, time
+import urllib3, xlrd, logging, re, time, datetime
 import numpy as np
 from urllib3.exceptions import MaxRetryError
 
@@ -36,7 +36,7 @@ def sz_stock_proflie_clean(pre_clean_data):
         n_row = int(len(pre_clean_data) / n_item)
         n_col = int(n_item)
         after_clean_data = np.array(pre_clean_data).reshape(n_row, n_col)
-        after_clean_data = np.insert(after_clean_data, 2, 'SZ', axis=1)
+        after_clean_data = np.insert(after_clean_data, 2, 'sz', axis=1)
         after_clean_data = np.insert(after_clean_data, 3, 'A', axis=1)
         after_clean_data = after_clean_data[:, select_col]
         after_clean_data[:, 7:9] = after_clean_data[:, 7:9].astype('int64')
@@ -61,9 +61,14 @@ def ss_stock_proflie_clean(pre_clean_data):
             n_col = int(n_item)
             after_clean_data = np.array(pre_clean_data).reshape(n_row, n_col)
             after_clean_data[:, 5:7] = (after_clean_data[:, 5:7].astype('float64') * 10000).astype('int64')
-            after_clean_data = np.insert(after_clean_data, 2, 'SS', axis=1)
+            after_clean_data = np.insert(after_clean_data, 2, 'sh', axis=1)
             after_clean_data = np.insert(after_clean_data, 3, 'A', axis=1)
             after_clean_data = np.insert(after_clean_data, 9, '', axis=1)
+            for i in range(n_row):
+                try:
+                    datetime.datetime.strptime(after_clean_data[i, 6], '%Y-%m-%d')
+                except:
+                    after_clean_data[i, 6] = '1900-01-01'
             return after_clean_data
         else:
             logger.info('上交所股票概要信息清洗错误')
@@ -225,10 +230,11 @@ if __name__ == "__main__":
     sz_referer = 'http://www.szse.cn/market/stock/list/index.html'
     sz_url = 'http://www.szse.cn/api/report/ShowReport?SHOWTYPE=xlsx&CATALOGID=1110&TABKEY=tab1&random=0.4261879772679307'
     sz_domain = {'host': sz_host, 'referer': sz_referer, 'url': sz_url}
-    print(DomainLinkTest.is_link(ss_domain))
-    # g = GetStockProfile(ss_domain, sz_domain)
-    # data = g.get_ss_stock_profile()
-    # print(data)
+    # print(DomainLinkTest.is_link(ss_domain))
+    g = GetStockProfile(ss_domain, sz_domain)
+    data = g.get_ss_stock_profile()
+    # g.save_all_to_txt('a.txt')
+    # print([data])
     end_time = time.time()
     print('Time costs: %s' % str(end_time - start_time))
 

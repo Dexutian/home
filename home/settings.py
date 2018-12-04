@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'stockans',
     'mainpage',
     'customadminpage',
+    'django_apscheduler',
 ]
 
 MIDDLEWARE = [
@@ -127,3 +128,8 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
+
+
+CRONJOBS = [
+    ('*/1 * * * *', 'stockans.cron.get_stock_attentioned_price_online')
+]

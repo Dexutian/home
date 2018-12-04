@@ -29,9 +29,9 @@ class Domain(models.Model):
         verbose_name_plural = _("域名信息")
 
     name = models.CharField(unique=True, max_length=100, verbose_name=_('名称'))
-    host = models.CharField(null=True, blank=True, max_length=100, verbose_name=_('域名'))
-    referer = models.CharField(null=True, blank=True, max_length=100, verbose_name=_('Referer'))
-    url = models.CharField(unique=True, max_length=100, verbose_name=_('地址'))
+    host = models.CharField(null=True, blank=True, max_length=500, verbose_name=_('域名'))
+    referer = models.CharField(null=True, blank=True, max_length=500, verbose_name=_('Referer'))
+    url = models.CharField(unique=True, max_length=500, verbose_name=_('地址'))
     added_time = models.DateTimeField(auto_now_add=True, verbose_name=_('添加时间'))
     is_link = models.BooleanField(null=True, blank=True, verbose_name=_('可连接性'))
     link_time = models.DateTimeField(auto_now=True, verbose_name=_('连接时间'))

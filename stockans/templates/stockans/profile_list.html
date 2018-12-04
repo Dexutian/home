@@ -1,14 +1,26 @@
 {% extends 'utils/app_base.html' %}
-{% load stockans_filters_tags %}
 {% load static %}
+{% load stockans_filters_tags %}
 {% block css %}
-
+    <link rel="stylesheet" href="{% static 'stockans/css/profile_list.css' %}">
 {% endblock %}
 {% block content %}
-    {% stockans_search %}
-    {% stockans_action %}
-    {% stockans_result_list %}
+{% result_list_tag cl %}
 {% endblock %}
 {% block js %}
-
+    <script type="text/javascript">
+        var options = {
+        url: "{% url 'stockans:update_stockprofile' %}",
+        type: "post",
+        success: successfun,
+        dataType: "json",
+        {#timeout: 3000#}
+    };
+        $('#actions_btn').click(function () {
+            $('#actions_list').ajaxForm(options);
+        });
+        function successfun(data, status) {
+            alert(data.update_num + "条数据更新成功！")
+        }
+    </script>
 {% endblock %}

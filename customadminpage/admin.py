@@ -38,6 +38,8 @@ class PersonAdmin(admin.ModelAdmin):
 class GroupAdmin(admin.ModelAdmin):
     inlines = (MembershipInline,)
 
+    filter_horizontal = ['members']
+
 
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Book, BookAdmin)

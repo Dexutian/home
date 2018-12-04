@@ -1,7 +1,93 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ValidationError
 
+class ExtraStockProfileManager(models.Manager):
+    def update_by_bulk(self, list):
+        """
+        捆绑更新记录
+        :return:
+        """
+        if list is not None:
+            for instance in list:
+                self.update_or_create(
+                    stock_code=instance[4],
+                    defaults={
+                    'company_code': instance[0],
+                    'company_abb': instance[1],
+                    'exchange_no': instance[2],
+                    'stock_style': instance[3],
+                    'stock_abb': instance[5],
+                    'listing_date': instance[6],
+                    'general_capital': instance[7],
+                    'circulating_capital': instance[8],
+                    'by_sector': instance[9],
+                }
+                )
+            return len(list)
+        else:
+            return 0
+
+
+class ExtraAttentionedStockManager(models.Manager):
+    def get_attentioned_stock_by_user(self, request):
+        """
+        通过登录的用户获取关注的股票
+        :param request:
+        :return:
+        """
+        stock_queryset = self.filter(user=request.user).values('stock__stock_code', 'stock__stock_abb')
+        return stock_queryset
+
+
+class ExtraStockPriceOnLineManager(models.Manager):
+    def create_obj_by_list(self, list):
+        """
+        用价格列表更新记录
+        :return:
+        """
+        if list is not None:
+            stock = StockProfile.objects.get(exchange_no=list[0], stock_code=list[1])
+            obj = self.create(
+                stock=stock,
+                topen=list[2],
+                lclose=list[3],
+                now=list[4],
+                high=list[5],
+                low=list[6],
+                buy_vs=list[7],
+                sale_vs=list[8],
+                voturnover=list[9],
+                vaturnover=list[10],
+                buy1_num=list[11],
+                buy1_price=list[12],
+                buy2_num=list[13],
+                buy2_price=list[14],
+                buy3_num=list[15],
+                buy3_price=list[16],
+                buy4_num=list[17],
+                buy4_price=list[18],
+                buy5_num=list[19],
+                buy5_price=list[20],
+                sale1_num=list[21],
+                sale1_price=list[22],
+                sale2_num=list[23],
+                sale2_price=list[24],
+                sale3_num=list[25],
+                sale3_price=list[26],
+                sale4_num=list[27],
+                sale4_price=list[28],
+                sale5_num=list[29],
+                sale5_price=list[30],
+                date=list[31],
+                time=list[32],
+            )
+            if obj:
+                return True
+            else:
+                return False
 
 # Create your models here.
 class StockProfile(models.Model):
@@ -12,8 +98,8 @@ class StockProfile(models.Model):
         verbose_name = _('股票概要信息')
         verbose_name_plural = _('股票概要信息')
 
-    company_code = models.CharField(unique=True, max_length=7, verbose_name=_('公司简称'))
-    company_abb = models.CharField(null=True, max_length=100, verbose_name=_('公司代码'))
+    company_code = models.CharField(unique=True, max_length=7, verbose_name=_('公司代码'))
+    company_abb = models.CharField(null=True, max_length=100, verbose_name=_('公司简称'))
     exchange_no = models.CharField(null=True, max_length=100, verbose_name=_('交易所代码'),
                                    help_text=_('上交所：SS，深交所：SZ'))
     stock_style = models.CharField(null=True, max_length=100, verbose_name=_('股票类型'),
@@ -24,6 +110,9 @@ class StockProfile(models.Model):
     general_capital = models.FloatField(null=True, verbose_name=_('总股本/股'))
     circulating_capital = models.FloatField(null=True, verbose_name=_('流通股本/股'))
     by_sector = models.CharField(null=True, blank=True, max_length=100, verbose_name=_('所属行业'))
+
+    objects = models.Manager()
+    extra_objects = ExtraStockProfileManager()
 
     def __str__(self):
         return self.company_abb
@@ -100,8 +189,6 @@ class StockPriceOnLine(models.Model):
         verbose_name_plural = _('股票实时价格')
 
     stock = models.ForeignKey(StockProfile, on_delete=models.CASCADE, verbose_name=_('股票'))
-    date = models.DateField(null=True, verbose_name=_('日期'))
-    time = models.TimeField(null=True, verbose_name=_('时间'))
     topen = models.FloatField(null=True, verbose_name=_('开盘价/元'))
     lclose = models.FloatField(null=True, verbose_name=_('前收盘/元'))
     now = models.FloatField(null=True, verbose_name=_('当前价/元'))
@@ -131,6 +218,11 @@ class StockPriceOnLine(models.Model):
     sale4_price = models.FloatField(null=True, verbose_name=_('卖四价/元'))
     sale5_num = models.FloatField(null=True, verbose_name=_('卖五数/手'))
     sale5_price = models.FloatField(null=True, verbose_name=_('卖五价/元'))
+    date = models.DateField(null=True, verbose_name=_('日期'))
+    time = models.TimeField(null=True, verbose_name=_('时间'))
+
+    objects = models.Manager()
+    extra_objects = ExtraStockPriceOnLineManager()
 
     def __str__(self):
         return self.stock.stock_abb + ' : ' + self.date.strftime('%Y-%m-%d') + ' ' + self.time.strftime('%H:%M:%S %f')
@@ -146,4 +238,16 @@ class AttentionedStock(models.Model):
 
     attention_time = models.DateTimeField(auto_now_add=True, verbose_name=_('关注时间'))
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('用户'))
-    stock = models.ManyToManyField(StockProfile, verbose_name=_('关注的股票'))
+    stock = models.ForeignKey(StockProfile, on_delete=models.CASCADE, verbose_name=_('关注的股票'))
+
+    objects = models.Manager()
+    extra_objects = ExtraAttentionedStockManager()
+
+    def clean(self):
+        try:
+            AttentionedStock.objects.get(user=self.user, stock=self.stock)
+            raise ValidationError(
+                _('该用户已经关注此股票！')
+            )
+        except ObjectDoesNotExist:
+            super().clean()
