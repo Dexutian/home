@@ -1,0 +1,145 @@
+{% extends 'utils/app_base.html' %}
+{% load static %}
+{% load stockans_filters_tags %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'stockans/css/profile_list.css' %}">
+{% endblock %}
+{% block content %}
+<div class="price_online_container" style="width: 100%; padding: 10px;">
+<div class="table_row" style="width: 100%; margin: 0; padding: 0;">
+    <table class="table table-striped table-hover table-sm table-bordered">
+    <thead class="thead-light">
+    <tr>
+        <th scope="col">股票代码</th>
+        <th scope="col">股票简称</th>
+        <th scope="col">日期</th>
+        <th scope="col">时间</th>
+        <th scope="col">开盘价/元</th>
+        <th scope="col">昨收盘/元</th>
+        <th scope="col">现价/元</th>
+        <th scope="col">最高价/元</th>
+        <th scope="col">最低价/元</th>
+    </tr>
+    </thead>
+    {% if stock_queryset %}
+        <tbody>
+        {% for stock in stock_queryset %}
+            <tr id="{{ stock.stock__stock_code }}">
+                <td>{{ stock.stock__stock_code }}</td>
+                <td>{{ stock.stock__stock_abb }}</td>
+                <td class="stock_data_online"></td>
+                <td class="stock_data_online"></td>
+                <td class="stock_data_online"></td>
+                <td class="stock_data_online"></td>
+                <td class="stock_data_online"></td>
+                <td class="stock_data_online"></td>
+                <td class="stock_data_online"></td>
+            </tr>
+        {% endfor %}
+      </tbody>
+    {% endif %}
+    </table>
+</div>
+<div class="chart_row" style="width: 100%; margin: 0; padding: 0;">
+    <div id="graph_data_online" style="width: 100%; height: 500px;"></div>
+</div>
+</div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'stockans/js/echarts.js' %}"></script>
+    <script type="text/javascript">
+    $(document).ready(
+        {#update_price_online_cell()#}
+        timer = self.setInterval("update_price_online_cell()", 5000)
+    );
+    
+    function get_chart_data(origin_data) {
+        chart_data = [];
+        for(i = 0; i <= origin_data.length-1; i++){
+            data_per_time = [];
+            var date = origin_data[i][0] + ' ' + origin_data[i][1];
+            date = date.replace(/-/g,'/');
+            data_per_time[0] = new Date(date).getTime();
+            data_per_time[1] = origin_data[i][2];
+            chart_data.push(data_per_time);
+        }
+        return chart_data;
+    }
+
+    function update_price_online_cell() {
+        $.get("{% url 'stockans:update_price_online_data' %}", function(price_online_data){
+
+            /*---------------------charts代码---------------------*/
+            var legend_data = [];
+            var series_data = [];
+            /*---------------------charts代码---------------------*/
+
+            for(var stock_num=0; stock_num <= price_online_data.length-1; stock_num++){
+                var table_row =document.getElementById(price_online_data[stock_num]["code"]);
+                var table_cell_exist = table_row.getElementsByClassName("stock_data_online");
+                var price_per_stock = JSON.parse(price_online_data[stock_num]["price"]);
+
+                /*---------------------charts代码---------------------*/
+                var series_unit = new Object();
+                legend_data.push(price_online_data[stock_num]["abb"]);
+                series_unit.name = price_online_data[stock_num]["abb"];
+                series_unit.type = 'line';
+                series_unit.symbol = 'none';
+                series_unit.data = get_chart_data(price_per_stock);
+                series_data.push(series_unit);
+                /*---------------------charts代码---------------------*/
+
+                if(price_per_stock.length>1) {
+                    var price_per_stock_per_time = price_per_stock.pop();
+                    var price_per_stock_previous_time = price_per_stock.pop();
+                    for (var item_num = 0; item_num <= price_per_stock_per_time.length - 1; item_num++) {
+                        table_cell_exist[item_num].innerHTML = price_per_stock_per_time[item_num];
+                        if(price_per_stock_per_time[item_num] > price_per_stock_previous_time[item_num]) {
+                            table_cell_exist[item_num].style.color = "red";
+                        } else {
+                            table_cell_exist[item_num].style.color = "green";
+                        }
+                    }
+                }
+            }
+
+            myChart.setOption({
+                legend:{
+                    data:legend_data
+                },
+                series:series_data
+            });
+        });
+    }
+
+
+    var myChart = echarts.init(document.getElementById('graph_data_online'));
+
+    // 指定图表的配置项和数据
+    var option = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross'
+            }
+            },
+        grid: [
+            {left: '3%', right: '3%', top: '8%', bottom: '10%'},
+        ],
+        xAxis: [
+            {
+                type: 'time',
+            }
+            ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+            ],
+        series: []
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+    </script>
+{% endblock %}
