@@ -17,7 +17,7 @@ def get_price_online():
     get_stock_attentioned_price_online()
 
 register_events(scheduler)
-scheduler.start()
+# scheduler.start()
 
 
 # Create your views here.

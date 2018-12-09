@@ -12,7 +12,10 @@
     <link rel="stylesheet" href="{% static 'utils/css/app_base.css' %}">
     {% block css %}
     {% endblock %}
-    <title></title>
+    <title>
+        {% block title %}
+        {% endblock %}
+    </title>
 </head>
 <body>
 {% block content %}

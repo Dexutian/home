@@ -1,0 +1,31 @@
+.stockprofile_content {
+    padding: 10px;
+}
+.actions_select {
+    width: 100px;
+    height: 25px;
+}
+#changelist-search, #actions_list {
+    margin: 0;
+    padding: 2px auto;
+}
+
+#paginator_search_num {
+    width: 30px;
+    height: 20px;
+}
+.paginator .col {
+    margin: 0;
+    padding: 0 3px;
+    vertical-align: center;
+}
+.sts_btn {
+    width: 50px;
+    height: 25px;
+}
+#paginator_search_btn {
+    width: 50px;
+    height: 21px;
+    font-size: xx-small;
+}
+

@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 
+
 class ExtraStockProfileManager(models.Manager):
     def update_by_bulk(self, list):
         """
@@ -83,6 +84,8 @@ class ExtraStockPriceOnLineManager(models.Manager):
                 sale5_price=list[30],
                 date=list[31],
                 time=list[32],
+                chg_value=list[33],
+                chg_percent=list[34],
             )
             if obj:
                 return True
@@ -220,6 +223,8 @@ class StockPriceOnLine(models.Model):
     sale5_price = models.FloatField(null=True, verbose_name=_('卖五价/元'))
     date = models.DateField(null=True, verbose_name=_('日期'))
     time = models.TimeField(null=True, verbose_name=_('时间'))
+    chg_value = models.FloatField(null=True, verbose_name=_('涨跌额/元'))
+    chg_percent = models.FloatField(null=True, verbose_name=_('涨跌幅'))
 
     objects = models.Manager()
     extra_objects = ExtraStockPriceOnLineManager()

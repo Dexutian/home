@@ -1,0 +1,35 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    background-color: #CCCCCC;
+}
+.login_container {
+    margin: 10% auto;
+    height: 40%;
+    width: 60%;
+    /*background-color: #003366;*/
+}
+.login_row, .login_img_col, .login_img_form {
+    height: 100%;
+    width: 100%;
+    background-color: #003366;
+}
+#logo_img {
+    display: block;
+    width: 80%;
+    height: 20%;
+    margin: 30% auto;
+}
+.login_img_form form{
+    margin: 20% auto;
+}
+.login_img_form label {
+    color: #ffffff;
+}
+.login_img_form button {
+    width: 200px;
+    margin: auto 13%;
+}
+.login_img_form .form-group {
+    margin: 40px 5%;
+}

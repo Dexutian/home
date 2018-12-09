@@ -1,0 +1,38 @@
+@media (min-width: 992px) {
+    html {
+        font-size: small;
+    }
+
+    /*--- logo区域 ---*/
+    #logo_container {
+        background-color: #CCCCCC;
+        min-height: 30px;
+    }
+    #logo_img {
+        height: 30px;
+    }
+    #login_entry {
+        margin: 5px auto;
+    }
+
+    /*--- 导航栏区域 ---*/
+    .navbar, #pre_nav {
+        background-color: #CC3333;
+    }
+    .navbar {
+        min-height: 20px;
+    }
+    .navbar-nav>li>a {
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
+    .navbar-brand {
+        height: 20px;
+        padding-top: 0px;
+        font-size: small;
+    }
+    .navbar-toggle {
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
+}

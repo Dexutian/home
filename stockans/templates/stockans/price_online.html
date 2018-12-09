@@ -17,6 +17,8 @@
         <th scope="col">开盘价/元</th>
         <th scope="col">昨收盘/元</th>
         <th scope="col">现价/元</th>
+        <th scope="col">涨跌额/元</th>
+        <th scope="col">涨跌幅</th>
         <th scope="col">最高价/元</th>
         <th scope="col">最低价/元</th>
     </tr>
@@ -27,6 +29,8 @@
             <tr id="{{ stock.stock__stock_code }}">
                 <td>{{ stock.stock__stock_code }}</td>
                 <td>{{ stock.stock__stock_abb }}</td>
+                <td class="stock_data_online"></td>
+                <td class="stock_data_online"></td>
                 <td class="stock_data_online"></td>
                 <td class="stock_data_online"></td>
                 <td class="stock_data_online"></td>
@@ -49,8 +53,8 @@
     <script src="{% static 'stockans/js/echarts.js' %}"></script>
     <script type="text/javascript">
     $(document).ready(
-        {#update_price_online_cell()#}
-        timer = self.setInterval("update_price_online_cell()", 5000)
+        update_price_online_cell()
+        {#timer = self.setInterval("update_price_online_cell()", 5000)#}
     );
     
     function get_chart_data(origin_data) {
@@ -60,7 +64,7 @@
             var date = origin_data[i][0] + ' ' + origin_data[i][1];
             date = date.replace(/-/g,'/');
             data_per_time[0] = new Date(date).getTime();
-            data_per_time[1] = origin_data[i][2];
+            data_per_time[1] = origin_data[i][5];
             chart_data.push(data_per_time);
         }
         return chart_data;
@@ -96,7 +100,8 @@
                         table_cell_exist[item_num].innerHTML = price_per_stock_per_time[item_num];
                         if(price_per_stock_per_time[item_num] > price_per_stock_previous_time[item_num]) {
                             table_cell_exist[item_num].style.color = "red";
-                        } else {
+                        }
+                        if(price_per_stock_per_time[item_num] < price_per_stock_previous_time[item_num]) {
                             table_cell_exist[item_num].style.color = "green";
                         }
                     }

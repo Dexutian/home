@@ -2,9 +2,11 @@ from django.shortcuts import render
 from . import models as mainpage_models
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
+@login_required(login_url='/admin/login/')
 def index(request):
     """
     网站首页

@@ -1,0 +1,8 @@
+@media (min-width: 992px) {
+    html, body {
+        font-size: small;
+        margin: 0;
+        padding: 0;
+    }
+
+}

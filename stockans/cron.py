@@ -14,6 +14,10 @@ def clean_price_online(price_str):
     :return: 
     """""
     price_data = price_str.split(',')[1:-1]
+    chg_value = str((float(price_data[2]) - float(price_data[0])))
+    chg_percent = str((float(price_data[2])-float(price_data[0]))/float(price_data[0]))
+    price_data.append(chg_value)
+    price_data.append(chg_percent)
     return price_data
 
 
@@ -89,7 +93,7 @@ def pull_price_online(stock_queryset):
             price_online_per_stock['abb'] = stock['stock__stock_abb']
             price = json.dumps(list(StockPriceOnLine.objects.
                                     filter(stock__stock_code=stock['stock__stock_code'], stock__stock_abb=stock['stock__stock_abb']).
-                                    order_by('date', 'time').values_list('date', 'time', 'topen', 'lclose', 'now', 'high', 'low')), cls=CJsonEncoder)
+                                    order_by('date', 'time').values_list('date', 'time', 'topen', 'lclose', 'now', 'chg_value', 'chg_percent', 'high', 'low')), cls=CJsonEncoder)
             price_online_per_stock['price'] = price
             price_online.append(price_online_per_stock)
     # print(price_online)

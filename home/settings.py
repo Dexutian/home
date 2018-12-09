@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '1vw+(&7s(fk86geb$h(_o#d6hnoptb=ny$+jo_3m7(s*11581h'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'stockans',
     'mainpage',
-    'customadminpage',
+    'customedmainpage',
     'django_apscheduler',
 ]
 

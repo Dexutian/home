@@ -1,12 +1,14 @@
 import urllib3, xlrd, logging, re, time, datetime
 import numpy as np
 from urllib3.exceptions import MaxRetryError
+import os
+from django.conf import settings
 
 # 生成logger
 logger = logging.getLogger(__name__)
 logger.setLevel(level=logging.INFO)
-# handler = logging.FileHandler(os.path.join(settings.MEDIA_ROOT, 'log', 'pricedaily_csv.log'))
-handler = logging.FileHandler('getstockprofile.log')
+handler = logging.FileHandler(os.path.join(settings.MEDIA_ROOT, 'log', 'stockdataspider.log'))
+# handler = logging.FileHandler('getstockprofile.log')
 handler.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
